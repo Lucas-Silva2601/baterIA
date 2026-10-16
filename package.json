@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:open": "vite --open",
+    "start": "vite --open",
+    "stop": "node scripts/stop-dev.mjs",
+    "restart": "node scripts/restart-dev.mjs",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview --open"
   },
   "dependencies": {
     "axios": "^1.13.3",

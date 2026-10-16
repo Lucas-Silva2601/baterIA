@@ -1,10 +1,15 @@
 # 🥁 Bateria Virtual com IA
 
+> **Branch atual:** `migracao/nextjs-tailwind` — branch de trabalho para migrar o projeto para **React.js + Next.js + Tailwind CSS**.
+> O código atual ainda roda em **React 19 + Vite 7 + Tailwind CSS v4**. O Tailwind já está em uso (se necessário = já atendido), e a migração para Next.js será feita nesta branch por etapas (ver [Plano de Migração](#-plano-de-migração-para-nextjs)).
+
 Uma aplicação web interativa de bateria virtual com integração de Inteligência Artificial usando Groq API. Toque os pads da bateria, converse com a IA para criar ritmos incríveis e use o sistema de loop para praticar!
 
 ![Status](https://img.shields.io/badge/status-funcional-brightgreen)
-![React](https://img.shields.io/badge/React-18.2.0-blue)
-![Vite](https://img.shields.io/badge/Vite-5.0-purple)
+![React](https://img.shields.io/badge/React-19-blue)
+![Vite](https://img.shields.io/badge/Vite-7-purple)
+![Tailwind](https://img.shields.io/badge/Tailwind-4-38bdf8)
+![Next.js](https://img.shields.io/badge/Next.js-migra%C3%A7%C3%A3o_planejada-black)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
@@ -16,6 +21,8 @@ Uma aplicação web interativa de bateria virtual com integração de Inteligên
 - [Tecnologias](#-tecnologias)
 - [Pré-requisitos](#-pré-requisitos)
 - [Instalação](#-instalação)
+- [Execução rápida (abrir / parar / reiniciar)](#-execução-rápida-abrir--parar--reiniciar)
+- [Plano de Migração para Next.js](#-plano-de-migração-para-nextjs)
 - [Configuração](#-configuração)
 - [Como Usar](#-como-usar)
 - [Comandos da IA](#-comandos-da-ia)
@@ -80,10 +87,15 @@ Uma aplicação web interativa de bateria virtual com integração de Inteligên
 
 ## 🛠 Tecnologias
 
-### Frontend
-- **React 18.2.0** - Biblioteca UI
-- **Vite 5.0** - Build tool
+### Estado atual (branch `migracao/nextjs-tailwind`)
+- **React 19.2.0** - Biblioteca UI (ver `package.json`)
+- **Vite 7.2.4** - Build tool / dev server atual
+- **Tailwind CSS 4.1.18** - Estilos (via `@tailwindcss/postcss` + `@import "tailwindcss"`) — já atende ao requisito de Tailwind
 - **Web Audio API** - Reprodução de áudio
+
+### Alvo da migração
+- **Next.js (App Router)** - SSR/SSG, rotas e otimizações — migração a ser executada nesta branch
+- **Tailwind CSS** - Mantido (só ajustar config para o padrão do Next.js se necessário)
 
 ### Backend/API
 - **Groq API** - IA (Llama 3.3 70B)
@@ -134,13 +146,60 @@ Edite o arquivo `.env` e adicione sua API key do Groq:
 VITE_GROQ_API_KEY=sua_chave_aqui
 ```
 
-### 4. Inicie o servidor de desenvolvimento
+### 4. Inicie o servidor de desenvolvimento (já abre o navegador)
 
 ```bash
-npm run dev
+npm run dev:open
 ```
 
-O aplicativo estará disponível em `http://localhost:5173`
+O aplicativo estará disponível em `http://localhost:5173` e o navegador abre automaticamente.
+
+> Atalhos Windows (duplo-clique):
+> - `iniciar.bat` / `iniciar.ps1` → instala deps se faltar + `npm run dev:open`
+> - `parar.bat` / `parar.ps1` → fecha o projeto (libera portas 5173–5175)
+> - `reiniciar.bat` / `reiniciar.ps1` → para + inicia + abre o navegador
+
+---
+
+## ▶️ Execução rápida (abrir / parar / reiniciar)
+
+| Ação | npm | Windows (duplo-clique) |
+|------|-----|------------------------|
+| Executar + abrir navegador | `npm run dev:open` (ou `npm start`) | `iniciar.bat` ou `.\iniciar.ps1` |
+| Fechar o projeto | `npm run stop` | `parar.bat` ou `.\parar.ps1` |
+| Restartar o projeto | `npm run restart` | `reiniciar.bat` ou `.\reiniciar.ps1` |
+| Dev sem abrir navegador | `npm run dev` | — |
+| Preview do build + abrir navegador | `npm run preview` | — |
+
+Detalhes:
+- `npm run dev:open` = `vite --open` (sobe na porta `5173` e abre `http://localhost:5173`).
+- `npm run stop` = `node scripts/stop-dev.mjs` (mata os PIDs em `LISTENING` nas portas `5173/5174/5175`; não mata `node.exe` genérico por segurança).
+- `npm run restart` = `node scripts/restart-dev.mjs` (executa o stop, aguarda ~1,5s e roda `dev:open`).
+- Se o PowerShell bloquear `.ps1`, rode uma vez: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+
+### Criar/entrar nesta branch
+
+```bash
+git fetch origin
+git checkout migracao/nextjs-tailwind
+# ou, se a branch ainda só existe local:
+# git push -u origin migracao/nextjs-tailwind
+```
+
+---
+
+## 🔜 Plano de Migração para Next.js
+
+Escopo previsto nesta branch `migracao/nextjs-tailwind` (nada migrado ainda — só preparação):
+
+1. **Setup Next.js**: `npx create-next-app@latest` (App Router, Tailwind yes, ESLint yes) ou migração incremental com `npm i next`.
+2. **Portar `src/`**: `App.jsx` → `app/page.jsx`, `main.jsx` → `app/layout.jsx`, `index.css` → `app/globals.css`, componentes/hooks/services/utils para `app/` ou `src/`.
+3. **Ajustes obrigatórios**: `'use client'` em componentes com `AudioContext`, `localStorage`, drag & drop e chat; mover `VITE_GROQ_API_KEY` → `NEXT_PUBLIC_GROQ_API_KEY`; mover `public/sounds` e `public/images` para `public/` do Next.
+4. **Tailwind**: manter v4 (`@import "tailwindcss"`) ou alinhar com a versão instalada pelo `create-next-app`; revisar `tailwind.config.js` / `postcss.config.js`.
+5. **Build/validar**: `npm run dev`, `npm run build`, testar sons, loop, chat IA e drag & drop.
+6. **Scripts**: manter `iniciar/parar/reiniciar` atualizando a porta para `3000` quando o Next.js assumir (hoje é `5173` do Vite).
+
+> Status Tailwind: **já necessário e já em uso** — nenhuma instalação extra foi feita agora. Só revisar na hora do Next.js se o scaffold pedir versão diferente.
 
 ---
 
@@ -316,17 +375,25 @@ bateria-ia-react/
 
 ```bash
 # Desenvolvimento
-npm run dev          # Inicia servidor de desenvolvimento
+npm run dev          # Inicia servidor Vite (sem abrir navegador)
+npm run dev:open     # Inicia + abre http://localhost:5173 no navegador
+npm start            # Atalho para dev:open
+
+# Controle do projeto
+npm run stop         # Fecha o projeto (libera portas 5173/5174/5175)
+npm run restart      # Para + inicia + abre o navegador
 
 # Build
 npm run build        # Cria build de produção
 
 # Preview
-npm run preview      # Preview do build de produção
+npm run preview      # Preview do build de produção (+ abre navegador)
 
 # Lint
 npm run lint         # Verifica erros de código
 ```
+
+Windows (duplo-clique na raiz do projeto): `iniciar.bat` / `parar.bat` / `reiniciar.bat` (ou os equivalentes `.ps1`).
 
 ---
 
