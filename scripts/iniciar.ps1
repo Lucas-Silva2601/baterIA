@@ -1,9 +1,9 @@
 # ============================================================
 #  baterIA - INICIAR projeto + abrir no navegador
 #  Branch: migracao/nextjs-tailwind
-#  Uso: .\iniciar.ps1
+#  Uso: .\scripts\iniciar.ps1
 # ============================================================
-Set-Location $PSScriptRoot
+Set-Location (Split-Path $PSScriptRoot -Parent)
 
 if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
   Write-Host "[ERRO] npm/Node.js nao encontrado no PATH." -ForegroundColor Red

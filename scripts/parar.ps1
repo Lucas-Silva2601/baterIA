@@ -1,6 +1,6 @@
 # ============================================================
 #  baterIA - PARAR / fechar projeto (libera portas 5173-5175)
-#  Uso: .\parar.ps1
+#  Uso: .\scripts\parar.ps1
 # ============================================================
-Set-Location $PSScriptRoot
+Set-Location (Split-Path $PSScriptRoot -Parent)
 npm run stop

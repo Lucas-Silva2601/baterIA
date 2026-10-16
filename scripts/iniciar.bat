@@ -2,9 +2,9 @@
 REM ============================================================
 REM  baterIA - INICIAR projeto + abrir no navegador
 REM  Branch: migracao/nextjs-tailwind
-REM  Uso: duplo-clique ou .\iniciar.bat
+REM  Uso: duplo-clique ou scripts\iniciar.bat
 REM ============================================================
-cd /d "%~dp0"
+cd /d "%~dp0.."
 
 where npm >nul 2>nul
 if errorlevel 1 (

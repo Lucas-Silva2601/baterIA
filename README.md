@@ -86,9 +86,9 @@ npm run dev:open        # abre http://localhost:5173 no navegador
 
 | Ação | Comando npm | Windows (duplo-clique) |
 |------|-------------|------------------------|
-| ▶️ Executar + abrir navegador | `npm run dev:open` | `iniciar.bat` |
-| ⏹️ Fechar o projeto | `npm run stop` | `parar.bat` |
-| 🔄 Reiniciar | `npm run restart` | `reiniciar.bat` |
+| ▶️ Executar + abrir navegador | `npm run dev:open` | `scripts/iniciar.bat` |
+| ⏹️ Fechar o projeto | `npm run stop` | `scripts/parar.bat` |
+| 🔄 Reiniciar | `npm run restart` | `scripts/reiniciar.bat` |
 | 📦 Build de produção | `npm run build` | — |
 
 ---
@@ -122,8 +122,10 @@ Isso faz a IA **agir na interface**, não apenas conversar — um padrão aplic�
 │   ├── hooks/          # useAudioPlayer, useLoop, useChat
 │   ├── services/       # integração com a Groq API
 │   └── utils/          # constantes, parser de comandos, helpers
-├── scripts/            # stop-dev.mjs, restart-dev.mjs (controle do servidor)
-├── iniciar|parar|reiniciar.(bat|ps1)  # atalhos Windows
+├── scripts/            # controle do servidor (dev:open/stop/restart)
+│   ├── stop-dev.mjs, restart-dev.mjs
+│   └── iniciar|parar|reiniciar.(bat|ps1)  # atalhos Windows (duplo-clique)
+├── docs/screenshots/   # prints da aplicação
 └── README.md
 ```
 

@@ -1,6 +1,6 @@
 # ============================================================
 #  baterIA - REINICIAR projeto (para + inicia + abre navegador)
-#  Uso: .\reiniciar.ps1
+#  Uso: .\scripts\reiniciar.ps1
 # ============================================================
-Set-Location $PSScriptRoot
+Set-Location (Split-Path $PSScriptRoot -Parent)
 npm run restart
