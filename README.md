@@ -125,7 +125,6 @@ Isso faz a IA **agir na interface**, não apenas conversar — um padrão aplic�
 ├── scripts/            # controle do servidor (dev:open/stop/restart)
 │   ├── stop-dev.mjs, restart-dev.mjs
 │   └── iniciar|parar|reiniciar.(bat|ps1)  # atalhos Windows (duplo-clique)
-├── docs/screenshots/   # prints da aplicação
 └── README.md
 ```
 
