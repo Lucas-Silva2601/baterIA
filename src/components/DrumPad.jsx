@@ -96,12 +96,15 @@ const DrumPad = ({
       ref={padRef}
       onClick={handleClick}
       style={positionStyle}
+      title={`${name} (tecla ${drumKey})`}
       className={`
         relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28
         rounded-xl transition-all duration-100 ease-out
         flex flex-col items-center justify-center
         border-b-4 active:border-b-0 active:translate-y-1
         group select-none transform
+        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400
+        focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900
         ${isDraggable ? 'cursor-move' : 'cursor-pointer'}
         ${isActive 
           ? 'bg-cyan-400 border-cyan-600 shadow-[0_0_30px_rgba(34,211,238,0.6)] scale-95' 

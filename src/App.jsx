@@ -112,16 +112,16 @@ function App() {
 
         {/* Content Grid */}
         <div className="relative z-10 p-4 md:p-8 max-w-[1800px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8">
             
             {/* ========================================
                 ESQUERDA: Bateria com Baquetas Animadas
                 ======================================== */}
-            <div className="lg:col-span-8 flex flex-col gap-4">
+            <div className="lg:col-span-8 flex flex-col gap-5">
               {/* Área da Bateria */}
               <div className="relative bg-gradient-to-br from-slate-800/40 to-slate-900/40 
                             rounded-3xl border border-slate-700/50 shadow-2xl backdrop-blur-xl 
-                            overflow-hidden h-[600px]">
+                            overflow-hidden min-h-[560px] xl:h-[640px]">
                 
                 {/* Efeito de Stage Light */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 
@@ -178,7 +178,7 @@ function App() {
                   />
                   
                   {/* Controles do Loop */}
-                  <div className="flex gap-3 mt-4">
+                  <div className="flex flex-col sm:flex-row gap-3 mt-4">
                     <button
                       onClick={handleToggleLoop}
                       className={`flex-1 py-3 rounded-xl font-bold text-sm uppercase tracking-wide
@@ -206,7 +206,7 @@ function App() {
 
               {/* Instruções Elegantes */}
               <div className="text-center">
-                <p className="text-sm text-slate-500 flex items-center justify-center gap-4">
+                <p className="text-sm text-slate-500 flex items-center justify-center gap-4 flex-wrap px-2">
                   <span className="flex items-center gap-2">
                     <kbd className="px-2 py-1 bg-slate-800 border border-slate-700 rounded text-xs">Click</kbd>
                     ou use o teclado

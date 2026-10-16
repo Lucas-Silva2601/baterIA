@@ -80,19 +80,23 @@ export const DRUM_SOUNDS = {
   },
 };
 
-// Posições iniciais dos pads (pode ser customizado pelo usuário)
+// Posições iniciais dos pads (palco de 640x510 — pads de 112px com respiro de 30-40px)
+// Layout em ferradura: pratos em cima, tambores no meio, base embaixo
 export const INITIAL_PAD_POSITIONS = {
-  A: { x: 50, y: 50 },
-  S: { x: 150, y: 50 },
-  W: { x: 250, y: 50 },
-  D: { x: 350, y: 50 },
-  F: { x: 450, y: 50 },
-  R: { x: 550, y: 50 },
-  J: { x: 650, y: 50 },
-  K: { x: 750, y: 50 },
-  Z: { x: 50, y: 150 },
-  X: { x: 150, y: 150 },
-  C: { x: 250, y: 150 },
+  // Fileira 1: pratos (y=24)
+  A: { x: 62, y: 24 },
+  Z: { x: 204, y: 24 },
+  C: { x: 346, y: 24 },
+  J: { x: 488, y: 24 },
+  // Fileira 2: tambores (y=176)
+  S: { x: 62, y: 176 },
+  W: { x: 204, y: 176 },
+  D: { x: 346, y: 176 },
+  F: { x: 488, y: 176 },
+  // Fileira 3: base (y=328)
+  R: { x: 122, y: 328 },
+  K: { x: 264, y: 328 },
+  X: { x: 406, y: 328 },
 };
 
 // Configurações de BPM disponíveis
