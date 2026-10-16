@@ -495,34 +495,7 @@ Contribuições são bem-vindas! Para contribuir:
 
 ## 📚 Documentação Adicional
 
-Este projeto possui documentação completa e detalhada:
-
-### 🚀 Guias de Início
-- **[INICIO_RAPIDO.md](INICIO_RAPIDO.md)** - Comece a usar em 5 minutos
-- **[README.md](README.md)** - Este arquivo (documentação principal)
-
-### 📊 Relatórios de Desenvolvimento
-- **[CHECKLIST.md](../CHECKLIST.md)** - Checklist completo de desenvolvimento (510 linhas)
-- **[FASE1_CONCLUIDA.md](FASE1_CONCLUIDA.md)** - Relatório da Fase 1 (Setup)
-- **[FASE2_CONCLUIDA.md](FASE2_CONCLUIDA.md)** - Relatório da Fase 2 (Utilitários)
-- **[FASE3_CONCLUIDA.md](FASE3_CONCLUIDA.md)** - Relatório da Fase 3 (Serviços)
-- **[FASE4_CONCLUIDA.md](FASE4_CONCLUIDA.md)** - Relatório da Fase 4 (Hooks)
-- **[FASE5_CONCLUIDA.md](FASE5_CONCLUIDA.md)** - Relatório da Fase 5 (Componentes)
-- **[FASE6-7_CONCLUIDA.md](FASE6-7_CONCLUIDA.md)** - Relatório das Fases 6 e 7 (App e Estilos)
-
-### 🧪 Testes e Validação
-- **[TESTES_VALIDACAO.md](TESTES_VALIDACAO.md)** - Relatório completo de testes (117 testes)
-
-### 📈 Resumos e Certificados
-- **[PROJETO_COMPLETO.md](PROJETO_COMPLETO.md)** - Resumo do projeto completo
-- **[PROJETO_FINALIZADO.md](PROJETO_FINALIZADO.md)** - Certificado de conclusão
-- **[RESUMO_FINAL.md](RESUMO_FINAL.md)** - Estatísticas finais do projeto
-- **[INDICE_COMPLETO.md](INDICE_COMPLETO.md)** - Índice de todos os arquivos (37 arquivos)
-
-### 🎉 Celebração
-- **[PARABENS.md](PARABENS.md)** - Celebração da conclusão do projeto
-
-**Total**: 14 documentos completos com mais de 2.000 linhas de documentação!
+A documentação foi consolidada neste `README.md`. Os arquivos `.md` auxiliares de desenvolvimento (fases, checklists, resumos e relatórios) foram removidos da branch `migracao/nextjs-tailwind` para manter o repositório limpo — o histórico continua disponível no Git (`git log -- --name-only -- "*.md"`).
 
 ---
 
