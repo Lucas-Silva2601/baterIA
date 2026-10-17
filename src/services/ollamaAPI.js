@@ -2,15 +2,26 @@ import axios from 'axios';
 import { SYSTEM_PROMPT } from '../utils/constants';
 
 /**
- * URL base da API do Ollama Cloud (compatível com OpenAI)
+ * Base da API do Ollama Cloud (compatível com OpenAI).
  * Docs: https://docs.ollama.com/api/openai-compatibility
+ *
+ * Por padrão usamos o proxy do Vite (/ollama-api), pois ollama.com não
+ * envia cabeçalhos CORS e o navegador bloquearia a chamada direta.
+ * Pode ser sobrescrito por VITE_OLLAMA_API_BASE (ex.: um backend próprio).
  */
-const OLLAMA_API_URL = 'https://ollama.com/v1/chat/completions';
+const OLLAMA_API_BASE = (
+  import.meta.env.VITE_OLLAMA_API_BASE || '/ollama-api'
+).replace(/\/+$/, '');
+
+/**
+ * URL da API de chat
+ */
+const OLLAMA_API_URL = `${OLLAMA_API_BASE}/v1/chat/completions`;
 
 /**
  * URL para listar modelos disponíveis no Ollama Cloud
  */
-const OLLAMA_MODELS_URL = 'https://ollama.com/v1/models';
+const OLLAMA_MODELS_URL = `${OLLAMA_API_BASE}/v1/models`;
 
 /**
  * Obtém a API key do Ollama Cloud das variáveis de ambiente
@@ -44,6 +55,7 @@ const getDefaultModel = () =>
  * @param {number} options.temperature - Temperatura (0-2, padrão: 0.7)
  * @param {number} options.maxTokens - Máximo de tokens (padrão: 1024)
  * @param {number} options.timeout - Timeout em ms (padrão: 30000)
+ * @param {AbortSignal} options.signal - Sinal para cancelar a requisição
  * @returns {Promise<string>} - Resposta da IA
  * @throws {Error} - Em caso de erro na requisição
  */
@@ -56,6 +68,7 @@ export const callOllama = async (
     temperature = 0.7,
     maxTokens = 1024,
     timeout = 30000,
+    signal,
   } = options;
 
   try {
@@ -96,6 +109,7 @@ export const callOllama = async (
           'Content-Type': 'application/json',
         },
         timeout,
+        signal,
       }
     );
 
@@ -111,18 +125,29 @@ export const callOllama = async (
 
     throw new Error('Resposta da API em formato inesperado');
   } catch (error) {
+    // Requisição cancelada pelo usuário (AbortController)
+    if (axios.isCancel(error) || error.code === 'ERR_CANCELED') {
+      const canceledError = new Error('Requisição cancelada.');
+      canceledError.canceled = true;
+      throw canceledError;
+    }
+
     // Tratamento de erros específicos
     if (error.response) {
       // Erro da API
       const status = error.response.status;
-      const message = error.response.data?.error?.message || 'Erro desconhecido';
+      const apiError = error.response.data?.error;
+      const message =
+        apiError?.message ||
+        (typeof apiError === 'string' ? apiError : null) ||
+        'Erro desconhecido';
 
       switch (status) {
         case 401:
           throw new Error('API key inválida. Verifique suas credenciais.');
         case 404:
           throw new Error(
-            `Modelo não encontrado no Ollama Cloud. Verifique VITE_OLLAMA_MODEL (modelos: https://ollama.com/api/tags).`
+            `Modelo não encontrado no Ollama Cloud. Verifique VITE_OLLAMA_MODEL (modelos disponíveis: ${OLLAMA_MODELS_URL}).`
           );
         case 429:
           throw new Error('Limite de requisições excedido. Tente novamente mais tarde.');
@@ -135,10 +160,15 @@ export const callOllama = async (
       }
     } else if (error.request) {
       // Erro de rede/timeout
-      if (error.code === 'ECONNABORTED') {
+      if (
+        error.code === 'ECONNABORTED' ||
+        error.code === 'ETIMEDOUT'
+      ) {
         throw new Error('Timeout: A requisição demorou muito. Tente novamente.');
       }
-      throw new Error('Erro de conexão. Verifique sua internet.');
+      throw new Error(
+        'Erro de conexão com o Ollama Cloud. Verifique sua internet e se o servidor de desenvolvimento (proxy /ollama-api) está rodando.'
+      );
     } else if (error.message) {
       // Erro de validação ou outro
       throw error;
@@ -171,10 +201,12 @@ export const callOllamaWithRetry = async (
     } catch (error) {
       lastError = error;
 
-      // Não fazer retry em erros de validação ou autenticação
+      // Não fazer retry em cancelamentos, erros de validação ou autenticação
       if (
+        error.canceled ||
         error.message.includes('inválido') ||
-        error.message.includes('API key')
+        error.message.includes('API key') ||
+        error.message.includes('cancelada')
       ) {
         throw error;
       }

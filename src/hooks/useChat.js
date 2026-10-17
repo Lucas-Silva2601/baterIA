@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { callOllamaWithRetry } from '../services/ollamaAPI';
-import { executeAICommand, parseAIResponse } from '../utils/commandParser';
+import { executeAICommand } from '../utils/commandParser';
 import { CHAT_CONFIG } from '../utils/constants';
 import { generateId } from '../utils/helpers';
 
@@ -71,7 +71,9 @@ export const useChat = (loopControls) => {
         retryDelay: 1000,
         temperature: 0.8,
         maxTokens: 1024,
+        signal: abortControllerRef.current.signal,
       });
+      abortControllerRef.current = null;
 
       // 🥁 NOVO: Processar resposta da IA (texto + JSON)
       // Separar texto da IA do comando JSON
@@ -99,14 +101,20 @@ export const useChat = (loopControls) => {
 
       return aiText || 'Comando executado';
     } catch (err) {
-      const errorMessage = err.message || 'Erro ao se comunicar com a IA';
-      setError(errorMessage);
       setIsLoading(false);
       setIsTyping(false);
-      
+
+      // Cancelamento não é erro: apenas encerra sem poluir o chat
+      if (err.canceled) {
+        return null;
+      }
+
+      const errorMessage = err.message || 'Erro ao se comunicar com a IA';
+      setError(errorMessage);
+
       // Adicionar mensagem de erro no chat
       addMessage('ai', `❌ Erro: ${errorMessage}`);
-      
+
       throw err;
     }
   }, [addMessage, loopControls]);
