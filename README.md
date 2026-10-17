@@ -84,12 +84,12 @@ cp .env.example .env   # adicione sua VITE_OLLAMA_API_KEY
 npm run dev:open        # abre http://localhost:5173 no navegador
 ```
 
-| Ação | Comando npm | Windows (duplo-clique) |
-|------|-------------|------------------------|
-| ▶️ Executar + abrir navegador | `npm run dev:open` | `scripts/iniciar.bat` |
-| ⏹️ Fechar o projeto | `npm run stop` | `scripts/parar.bat` |
-| 🔄 Reiniciar | `npm run restart` | `scripts/reiniciar.bat` |
-| 📦 Build de produção | `npm run build` | — |
+| Ação | Comando npm |
+|------|-------------|
+| ▶️ Executar + abrir navegador | `npm run dev:open` |
+| ⏹️ Fechar o projeto | `npm run stop` |
+| 🔄 Reiniciar | `npm run restart` |
+| 📦 Build de produção | `npm run build` |
 
 ---
 
@@ -122,9 +122,8 @@ Isso faz a IA **agir na interface**, não apenas conversar — um padrão aplic�
 │   ├── hooks/          # useAudioPlayer, useLoop, useChat
 │   ├── services/       # integração com a Ollama Cloud API
 │   └── utils/          # constantes, parser de comandos, helpers
-├── scripts/            # controle do servidor (dev:open/stop/restart)
-│   ├── stop-dev.mjs, restart-dev.mjs
-│   └── iniciar|parar|reiniciar.(bat|ps1)  # atalhos Windows (duplo-clique)
+├── scripts/            # controle do servidor (node scripts)
+│   └── stop-dev.mjs, restart-dev.mjs
 └── README.md
 ```
 
