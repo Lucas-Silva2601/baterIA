@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { callGroqWithRetry } from '../services/groqAPI';
+import { callOllamaWithRetry } from '../services/ollamaAPI';
 import { executeAICommand, parseAIResponse } from '../utils/commandParser';
 import { CHAT_CONFIG } from '../utils/constants';
 import { generateId } from '../utils/helpers';
@@ -65,8 +65,8 @@ export const useChat = (loopControls) => {
       // Criar AbortController para possível cancelamento
       abortControllerRef.current = new AbortController();
 
-      // Chamar API Groq
-      const aiResponse = await callGroqWithRetry(userMessage.trim(), {
+      // Chamar API Ollama Cloud
+      const aiResponse = await callOllamaWithRetry(userMessage.trim(), {
         maxRetries: 3,
         retryDelay: 1000,
         temperature: 0.8,

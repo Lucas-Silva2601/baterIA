@@ -2,21 +2,27 @@ import axios from 'axios';
 import { SYSTEM_PROMPT } from '../utils/constants';
 
 /**
- * URL base da API Groq
+ * URL base da API do Ollama Cloud (compatível com OpenAI)
+ * Docs: https://docs.ollama.com/api/openai-compatibility
  */
-const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+const OLLAMA_API_URL = 'https://ollama.com/v1/chat/completions';
 
 /**
- * Obtém a API key do Groq das variáveis de ambiente
+ * URL para listar modelos disponíveis no Ollama Cloud
+ */
+const OLLAMA_MODELS_URL = 'https://ollama.com/v1/models';
+
+/**
+ * Obtém a API key do Ollama Cloud das variáveis de ambiente
  * @returns {string} - API key
  * @throws {Error} - Se a API key não estiver configurada
  */
 const getApiKey = () => {
-  const apiKey = import.meta.env.VITE_GROQ_API_KEY;
+  const apiKey = import.meta.env.VITE_OLLAMA_API_KEY;
   
-  if (!apiKey || apiKey === 'your_groq_api_key_here') {
+  if (!apiKey || apiKey === 'your_ollama_api_key_here') {
     throw new Error(
-      'API key do Groq não configurada. Configure VITE_GROQ_API_KEY no arquivo .env'
+      'API key do Ollama Cloud não configurada. Configure VITE_OLLAMA_API_KEY no arquivo .env'
     );
   }
   
@@ -24,22 +30,29 @@ const getApiKey = () => {
 };
 
 /**
- * Chama a API do Groq para gerar resposta musical
+ * Obtém o modelo padrão do Ollama Cloud
+ * (sobreponível pela variável VITE_OLLAMA_MODEL)
+ */
+const getDefaultModel = () =>
+  import.meta.env.VITE_OLLAMA_MODEL || 'gemma4:31b';
+
+/**
+ * Chama a API do Ollama Cloud para gerar resposta musical
  * @param {string} userPrompt - Prompt do usuário
  * @param {Object} options - Opções adicionais
- * @param {string} options.model - Modelo a ser usado (padrão: llama-3.3-70b-versatile)
+ * @param {string} options.model - Modelo a ser usado (padrão: gemma4:31b ou VITE_OLLAMA_MODEL)
  * @param {number} options.temperature - Temperatura (0-2, padrão: 0.7)
  * @param {number} options.maxTokens - Máximo de tokens (padrão: 1024)
  * @param {number} options.timeout - Timeout em ms (padrão: 30000)
  * @returns {Promise<string>} - Resposta da IA
  * @throws {Error} - Em caso de erro na requisição
  */
-export const callGroq = async (
+export const callOllama = async (
   userPrompt,
   options = {}
 ) => {
   const {
-    model = 'llama-3.3-70b-versatile',
+    model = getDefaultModel(),
     temperature = 0.7,
     maxTokens = 1024,
     timeout = 30000,
@@ -68,7 +81,7 @@ export const callGroq = async (
 
     // Fazer requisição
     const response = await axios.post(
-      GROQ_API_URL,
+      OLLAMA_API_URL,
       {
         model,
         messages,
@@ -107,14 +120,18 @@ export const callGroq = async (
       switch (status) {
         case 401:
           throw new Error('API key inválida. Verifique suas credenciais.');
+        case 404:
+          throw new Error(
+            `Modelo não encontrado no Ollama Cloud. Verifique VITE_OLLAMA_MODEL (modelos: https://ollama.com/api/tags).`
+          );
         case 429:
           throw new Error('Limite de requisições excedido. Tente novamente mais tarde.');
         case 500:
         case 502:
         case 503:
-          throw new Error('Erro no servidor Groq. Tente novamente mais tarde.');
+          throw new Error('Erro no servidor Ollama Cloud. Tente novamente mais tarde.');
         default:
-          throw new Error(`Erro na API Groq (${status}): ${message}`);
+          throw new Error(`Erro na API Ollama (${status}): ${message}`);
       }
     } else if (error.request) {
       // Erro de rede/timeout
@@ -127,30 +144,30 @@ export const callGroq = async (
       throw error;
     } else {
       // Erro desconhecido
-      throw new Error('Erro desconhecido ao chamar a API Groq');
+      throw new Error('Erro desconhecido ao chamar a API Ollama Cloud');
     }
   }
 };
 
 /**
- * Chama a API do Groq com retry automático
+ * Chama a API do Ollama Cloud com retry automático
  * @param {string} userPrompt - Prompt do usuário
  * @param {Object} options - Opções adicionais
  * @param {number} options.maxRetries - Número máximo de tentativas (padrão: 3)
  * @param {number} options.retryDelay - Delay entre tentativas em ms (padrão: 1000)
  * @returns {Promise<string>} - Resposta da IA
  */
-export const callGroqWithRetry = async (
+export const callOllamaWithRetry = async (
   userPrompt,
   options = {}
 ) => {
-  const { maxRetries = 3, retryDelay = 1000, ...groqOptions } = options;
+  const { maxRetries = 3, retryDelay = 1000, ...ollamaOptions } = options;
 
   let lastError;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      return await callGroq(userPrompt, groqOptions);
+      return await callOllama(userPrompt, ollamaOptions);
     } catch (error) {
       lastError = error;
 
@@ -176,55 +193,29 @@ export const callGroqWithRetry = async (
 };
 
 /**
- * Testa a conexão com a API Groq
+ * Testa a conexão com a API do Ollama Cloud
  * @returns {Promise<boolean>} - True se a conexão foi bem-sucedida
  */
-export const testGroqConnection = async () => {
+export const testOllamaConnection = async () => {
   try {
-    await callGroq('Teste', { maxTokens: 10, timeout: 5000 });
+    await callOllama('Teste', { maxTokens: 10, timeout: 5000 });
     return true;
   } catch (error) {
-    console.error('Erro ao testar conexão com Groq:', error.message);
+    console.error('Erro ao testar conexão com Ollama Cloud:', error.message);
     return false;
   }
 };
 
 /**
- * Obtém informações sobre o uso da API (se disponível)
- * @returns {Promise<Object|null>} - Informações de uso ou null
- */
-export const getGroqUsage = async () => {
-  try {
-    const apiKey = getApiKey();
-    
-    // Nota: Groq pode não ter endpoint de usage, ajustar conforme documentação
-    const response = await axios.get(
-      'https://api.groq.com/openai/v1/usage',
-      {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        timeout: 5000,
-      }
-    );
-
-    return response.data;
-  } catch (error) {
-    console.warn('Não foi possível obter informações de uso:', error.message);
-    return null;
-  }
-};
-
-/**
- * Lista modelos disponíveis na API Groq
+ * Lista modelos disponíveis no Ollama Cloud
  * @returns {Promise<Array>} - Lista de modelos
  */
-export const listGroqModels = async () => {
+export const listOllamaModels = async () => {
   try {
     const apiKey = getApiKey();
     
     const response = await axios.get(
-      'https://api.groq.com/openai/v1/models',
+      OLLAMA_MODELS_URL,
       {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -242,9 +233,8 @@ export const listGroqModels = async () => {
 
 // Exportação padrão
 export default {
-  callGroq,
-  callGroqWithRetry,
-  testGroqConnection,
-  getGroqUsage,
-  listGroqModels,
+  callOllama,
+  callOllamaWithRetry,
+  testOllamaConnection,
+  listOllamaModels,
 };

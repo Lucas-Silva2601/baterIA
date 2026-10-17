@@ -6,14 +6,14 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7-a855f7?logo=vite&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38bdf8?logo=tailwindcss&logoColor=white)
-![Groq AI](https://img.shields.io/badge/AI-Groq-orange)
+![Ollama AI](https://img.shields.io/badge/AI-Ollama_Cloud-black)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
 
 ## 📌 Sobre
 
-O **baterIA** é uma aplicação web onde o usuário toca bateria de três formas — clicando, pelo teclado ou conversando com uma IA. A IA (via Groq) entende pedidos em linguagem natural como *"crie um ritmo de rock"* e responde tocando sequências nos pads, podendo inclusive **ligar/desligar o loop e trocar o BPM por conta própria** através de um protocolo de comandos embutido nas respostas.
+O **baterIA** é uma aplicação web onde o usuário toca bateria de três formas — clicando, pelo teclado ou conversando com uma IA. A IA (via Ollama Cloud) entende pedidos em linguagem natural como *"crie um ritmo de rock"* e responde tocando sequências nos pads, podendo inclusive **ligar/desligar o loop e trocar o BPM por conta própria** através de um protocolo de comandos embutido nas respostas.
 
 Destaques do projeto:
 
@@ -51,7 +51,7 @@ Destaques do projeto:
 |--------|-------------|
 | Frontend | **React 19**, **Vite 7**, **Tailwind CSS 4** |
 | Áudio | **Web Audio API** (reprodução, `AudioContext`, pré-carregamento) |
-| IA | **Groq API** (Llama 3.3 70B) via **Axios** |
+| IA | **Ollama Cloud** (Gemma 4 31B) via **Axios** |
 | Estado | Hooks customizados (`useAudioPlayer`, `useLoop`, `useChat`) |
 | Qualidade | **ESLint**, **PropTypes** |
 
@@ -74,13 +74,13 @@ Destaques do projeto:
 
 ## 🚀 Como executar
 
-**Pré-requisitos:** Node.js 18+ e uma API key gratuita do [Groq](https://console.groq.com).
+**Pré-requisitos:** Node.js 18+ e uma API key do [Ollama Cloud](https://ollama.com/settings/keys).
 
 ```bash
 git clone https://github.com/Lucas-Silva2601/baterIA.git
 cd baterIA
 npm install
-cp .env.example .env   # adicione sua VITE_GROQ_API_KEY
+cp .env.example .env   # adicione sua VITE_OLLAMA_API_KEY
 npm run dev:open        # abre http://localhost:5173 no navegador
 ```
 
@@ -120,7 +120,7 @@ Isso faz a IA **agir na interface**, não apenas conversar — um padrão aplic�
 ├── src/
 │   ├── components/     # DrumPad, DrumKit, ChatBox, InputBox, LoopControls
 │   ├── hooks/          # useAudioPlayer, useLoop, useChat
-│   ├── services/       # integração com a Groq API
+│   ├── services/       # integração com a Ollama Cloud API
 │   └── utils/          # constantes, parser de comandos, helpers
 ├── scripts/            # controle do servidor (dev:open/stop/restart)
 │   ├── stop-dev.mjs, restart-dev.mjs
@@ -166,7 +166,7 @@ Isso faz a IA **agir na interface**, não apenas conversar — um padrão aplic�
 <summary><strong>🐛 Troubleshooting</strong></summary>
 
 - **Sons não tocam** → verifique `public/sounds/` e clique uma vez na página (política de autoplay).
-- **IA não responde** → confira `VITE_GROQ_API_KEY` no `.env` e sua conexão.
+- **IA não responde** → confira `VITE_OLLAMA_API_KEY` no `.env` e sua conexão.
 - **Loop não funciona** → aguarde o carregamento dos sons e clique num pad primeiro.
 - **Pads sumiram** → `localStorage.clear()` + recarregar a página.
 

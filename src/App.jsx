@@ -243,7 +243,7 @@ function App() {
                       <h2 className="text-sm font-bold text-cyan-400 uppercase tracking-widest">
                         AI Command Center
                       </h2>
-                      <p className="text-[10px] text-slate-500">Powered by Groq</p>
+                      <p className="text-[10px] text-slate-500">Powered by Ollama Cloud</p>
                     </div>
                   </div>
                   
@@ -279,7 +279,7 @@ function App() {
                   </div>
                   <div className="bg-slate-900/50 rounded-lg p-3">
                     <div className="text-[9px] text-slate-500 uppercase mb-1">AI</div>
-                    <div className="text-xs text-cyan-400 font-bold">GROQ</div>
+                    <div className="text-xs text-cyan-400 font-bold">OLLAMA</div>
                   </div>
                   <div className="bg-slate-900/50 rounded-lg p-3">
                     <div className="text-[9px] text-slate-500 uppercase mb-1">Loops</div>
@@ -301,7 +301,7 @@ function App() {
             <span className="hidden md:flex items-center gap-4">
               <span>React</span>
               <span>•</span>
-              <span>Groq AI</span>
+              <span>Ollama AI</span>
               <span>•</span>
               <span>Web Audio API</span>
             </span>

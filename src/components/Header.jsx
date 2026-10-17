@@ -31,7 +31,7 @@ const Header = () => {
                 baterIA
               </h1>
               <p className="text-xs text-slate-500 mt-0.5 font-medium tracking-wide">
-                Assistente Musical Inteligente • Powered by <span className="text-cyan-400">Groq</span>
+                Assistente Musical Inteligente • Powered by <span className="text-cyan-400">Ollama Cloud</span>
               </p>
             </div>
           </div>

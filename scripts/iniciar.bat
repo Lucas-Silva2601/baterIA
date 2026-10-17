@@ -23,7 +23,7 @@ if not exist ".env" (
   if exist ".env.example" (
     echo [AVISO] Arquivo .env nao encontrado. Copie com:
     echo   copy .env.example .env
-    echo Depois preencha VITE_GROQ_API_KEY.
+    echo Depois preencha VITE_OLLAMA_API_KEY.
   )
 )
 

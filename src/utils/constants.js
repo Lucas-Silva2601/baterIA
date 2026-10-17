@@ -127,7 +127,7 @@ export const CHAT_CONFIG = {
   SCROLL_SPEED: 30,
 };
 
-// Prompt do sistema para a IA Groq - API Mode (JSON Only)
+// Prompt do sistema para a IA Ollama Cloud - API Mode (JSON Only)
 export const SYSTEM_PROMPT = `Você é o "baterIA", um assistente musical inteligente e baterista virtual.
 Você é entusiasta, criativo e fala como um músico experiente.
 
